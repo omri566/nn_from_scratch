@@ -2,20 +2,24 @@ public class layer {
     
     neuron[] neurons;
     int numNeurons;
-    int numPredecessors;
-    int numOutputs;
+    int inputSize;
+    int outputSize;
     double[] outputs;
+    activation activation;
 
-    public layer(int numNeurons, int numinputs, int numOutputs){
+    public layer(int numNeurons, int numinputs, int numOutputs, activation activation) {
+        
+        // Initialize the layer with the number of neurons, input size, and output size
         this.numNeurons = numNeurons;
-        this.numPredecessors = numinputs;
-        this.numOutputs = numOutputs;
+        this.inputSize = numinputs;
+        this.outputSize = numOutputs;
         this.neurons = new neuron[numNeurons];
         this.outputs = new double[numNeurons];
-        
+        this.activation = activation;
+
         // Initialize the neurons in the layer
         for (int i = 0; i < numNeurons; i++) {
-            neurons[i] = new neuron(numPredecessors);
+            neurons[i] = new neuron(inputSize, activation);
         }
     }
 

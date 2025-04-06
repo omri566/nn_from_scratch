@@ -1,5 +1,12 @@
 public class ReLU implements activation {
 
+    // Constructor
+    public ReLU() {
+        // Initialize any necessary parameters for the ReLU activation function
+    }
+
+
+    // ReLU activation function implementation
     @Override
     public double activate(double x) {
         // Implement the activation function

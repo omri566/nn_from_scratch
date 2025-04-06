@@ -1,4 +1,11 @@
 public class sigmoid implements activation {
+    
+    // Constructor
+    public sigmoid() {
+        // Initialize any necessary parameters for the sigmoid activation function
+    }
+    
+    
     @Override
     public double activate(double x) {
         // Implement the activation function
