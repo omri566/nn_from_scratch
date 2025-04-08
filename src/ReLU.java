@@ -20,9 +20,9 @@ public class ReLU implements activation {
 
     public double derivative(double x) {
         if (x > 0) {
-            return 1;
-        } else if (x <= 0) {
-            return 0;
+            return 1.0;
+        } else {
+            return 0.0;
         }
     }
 }
