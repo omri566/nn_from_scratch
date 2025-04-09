@@ -63,6 +63,13 @@ public class Util {
         }
         return sum / vector.length;
     }
+    public static double vector_sum(double[] vector) {
+        double sum = 0;
+        for (int i=0; i < vector.length; i++) {
+            sum += vector[i];
+        }
+        return sum;
+    }
 
 
 }

@@ -68,11 +68,11 @@ public class network {
 
         // Calculate the error
         double[] loss_vector = loss_func.compute_loss(target, layers[numLayers].getOutputs());
-        double loss = Util.vector_mean(loss_vector);
+        double loss = Util.vector_sum(loss_vector);
         // Calculate deltas for output layer
         double[] error_vector = Util.multiply(loss_func.compute_loss_derivative(layers[numLayers].getOutputs(), target),
         activation.derivative(layers[numLayers].getPreActivations()));
-        
+        deltas[numLayers - 1] = error_vector;//indentify the last layer for backpropagation
 
 
         //calculate deltas for hidden layers
