@@ -67,11 +67,11 @@ public class network {
         double[][] deltas = new double[numLayers][];
 
         // Calculate the error
-        double[] loss_vector = loss_func.compute_loss(target, layers[numLayers].getOutputs());
+        double[] loss_vector = loss_func.compute_loss(target, layers[numLayers-1].getOutputs());
         double loss = Util.vector_sum(loss_vector);
         // Calculate deltas for output layer
-        double[] error_vector = Util.multiply(loss_func.compute_loss_derivative(layers[numLayers].getOutputs(), target),
-        activation.derivative(layers[numLayers].getPreActivations()));
+        double[] error_vector = Util.multiply(loss_func.compute_loss_derivative(layers[numLayers-1].getOutputs(), target),
+        activation.derivative(layers[numLayers-1].getPreActivations()));
         deltas[numLayers - 1] = error_vector;//indentify the last layer for backpropagation
 
 
@@ -103,7 +103,7 @@ public class network {
         return loss;
     }
 
-    public void train_one_batch(double[][] inputs, double[][] targets) {
+    public double train_one_batch(double[][] inputs, double[][] targets) {
         if (inputs.length != targets.length) {
             throw new IllegalArgumentException("Input and target arrays must have the same length.");
         
@@ -115,10 +115,11 @@ public class network {
         for(int i = 0; i < numLayers; i++) {
             layers[i].updateParams(learning_rate, inputs.length);
         }
+        return batch_loss / inputs.length;
        
     }
 
-    public void train_one_epoch(double[][] inputs, double[][] targets, int batch_size) {
+    public double train_one_epoch(double[][] inputs, double[][] targets, int batch_size) {
         if (inputs.length != targets.length) {
             throw new IllegalArgumentException("Input and target arrays must have the same length.");
         }
@@ -132,9 +133,16 @@ public class network {
             indices[i] = i;
         }
         // Shuffle the indices
-        java.util.Collections.shuffle(java.util.Arrays.asList(indices));
+        java.util.Random rnd = new java.util.Random();
+        for (int i = indices.length - 1; i > 0; i--) {
+            int j = rnd.nextInt(i + 1);
+            int temp = indices[i];
+            indices[i] = indices[j];
+            indices[j] = temp;
+        }
 
-        double total_loss = 0;
+        double total_epoch_loss = 0;
+        double epoch_loss = 0;
 
         // Process each batch
         for (int batch = 0; batch < num_batches; batch++) {
@@ -148,16 +156,13 @@ public class network {
             }
 
             // Train on the batch
-            train_one_batch(batch_inputs, batch_targets);
-
-            // Optionally, calculate the loss for this batch
-            for (int i = 0; i < batch_inputs.length; i++) {
-                total_loss += loss_func.compute_loss(batch_targets[i], getoutput(batch_inputs[i]))[0];
-            }
+            total_epoch_loss += train_one_batch(batch_inputs, batch_targets);
+            //NOTE: The loss is averaged over the batch size
+            //if we want to have batches in different sizes we'd need to avg the epoch by samples
         }
-
-        // Print the average loss for the epoch
-        double average_loss = total_loss / inputs.length;
-        System.out.println("Epoch Loss: " + average_loss);
+        epoch_loss = total_epoch_loss / num_batches;
+        System.out.println("Epoch loss: " + epoch_loss);
+        return epoch_loss;
+        }
     }
-}
+
