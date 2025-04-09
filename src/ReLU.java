@@ -25,4 +25,12 @@ public class ReLU implements activation {
             return 0.0;
         }
     }
+    public double[] derivative(double[] x) {
+        // Calculate the derivative for each element in the array
+        double[] derivatives = new double[x.length];
+        for (int i = 0; i < x.length; i++) {
+            derivatives[i] = derivative(x[i]);
+        }
+        return derivatives;
+    }
 }

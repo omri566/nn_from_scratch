@@ -122,25 +122,42 @@ public class network {
         if (inputs.length != targets.length) {
             throw new IllegalArgumentException("Input and target arrays must have the same length.");
         }
-        //divide the dataset into batches randomly
+
+        // Divide the dataset into batches randomly
         int num_batches = inputs.length / batch_size;
-        // Randomly shuffle the dataset
-        //for batch in batches run train_one_batch
-        //print the loss of the mean of all batches losses
 
-        // run over the entire dataset in batches
-        
+        // Create an array of indices and shuffle them
+        int[] indices = new int[inputs.length];
+        for (int i = 0; i < indices.length; i++) {
+            indices[i] = i;
+        }
+        // Shuffle the indices
+        java.util.Collections.shuffle(java.util.Arrays.asList(indices));
 
+        double total_loss = 0;
+
+        // Process each batch
+        for (int batch = 0; batch < num_batches; batch++) {
+            // Create the batch
+            double[][] batch_inputs = new double[batch_size][];
+            double[][] batch_targets = new double[batch_size][];
+            for (int i = 0; i < batch_size; i++) {
+                int idx = indices[batch * batch_size + i];
+                batch_inputs[i] = inputs[idx];
+                batch_targets[i] = targets[idx];
+            }
+
+            // Train on the batch
+            train_one_batch(batch_inputs, batch_targets);
+
+            // Optionally, calculate the loss for this batch
+            for (int i = 0; i < batch_inputs.length; i++) {
+                total_loss += loss_func.compute_loss(batch_targets[i], getoutput(batch_inputs[i]))[0];
+            }
+        }
+
+        // Print the average loss for the epoch
+        double average_loss = total_loss / inputs.length;
+        System.out.println("Epoch Loss: " + average_loss);
     }
-
-
-
-
-
-
-
-
-
-    
-  
 }

@@ -16,4 +16,12 @@ public class sigmoid implements activation {
         // sigmoidOutput is assumed to be σ(x), not the raw x
         return sigmoidOutput * (1 - sigmoidOutput);
     }
+    public double[] derivative(double[] sigmoidOutputs) {
+        // Calculate the derivative for each element in the array
+        double[] derivatives = new double[sigmoidOutputs.length];
+        for (int i = 0; i < sigmoidOutputs.length; i++) {
+            derivatives[i] = derivative(sigmoidOutputs[i]);
+        }
+        return derivatives;
+    }
 }
