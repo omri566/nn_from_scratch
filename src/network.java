@@ -5,14 +5,34 @@ public class network {
     activation activation;
     loss_func loss_func;
     double learning_rate = 0.01;
+    activation outputActivation;
 
-    public network(int[] layerSizes, activation activation,activation outpuActivation,loss_func loss_func, double learning_rate) {
+    public network(int[] layerSizes, activation activation,activation outputActivation,loss_func loss_func, double learning_rate) {
         // Initialize the network with the given layer sizes, activation function, and loss function
         
         this.activation = activation;
+        this.outputActivation = outputActivation;
         this.loss_func = loss_func;
         this.numLayers = layerSizes.length;
         this.layers = new layer[numLayers];
+        this.learning_rate = learning_rate;
+        
+        //check that there are at least 2 layers, other wise the layer initialization will fail
+        if (numLayers < 2) {
+            throw new IllegalArgumentException("Network must have at least 2 layers.");
+        }
+        
+        // Ensure all layer sizes are greater than 0
+        for (int index = 0; index < layerSizes.length; index++) {
+            int size = layerSizes[index];
+            if (size <= 0) {
+                throw new IllegalArgumentException("Invalid layer size at index " + index + ": expected > 0, but found " + size);
+            }
+        }
+
+        if (learning_rate <= 0 || Double.isNaN(learning_rate) || Double.isInfinite(learning_rate)) {
+            throw new IllegalArgumentException("Learning rate must be a positive finite number. Got: " + learning_rate);
+        }
 
         for (int i = 0; i < numLayers; i++) {
             if (i == 0) {
@@ -20,7 +40,7 @@ public class network {
                 layers[i] = new layer(layerSizes[i], layerSizes[i], layerSizes[i + 1], activation);
             } else if (i == numLayers - 1) {
                 // Output layer
-                layers[i] = new layer(layerSizes[i], layerSizes[i - 1], layerSizes[i], outpuActivation);
+                layers[i] = new layer(layerSizes[i], layerSizes[i - 1], layerSizes[i], outputActivation);
             } else {
                 // Hidden layers
                 layers[i] = new layer(layerSizes[i], layerSizes[i - 1], layerSizes[i + 1], activation);
@@ -65,7 +85,9 @@ public class network {
         }
 
         double[][] deltas = new double[numLayers][];
-
+        for (int i = 0; i < numLayers; i++) { // Initialize deltas to avoid runtime errors due to uninitialized arrays
+            deltas[i] = new double[layers[i].getNumNeurons()];
+        }
         // Calculate the error
         double[] loss_vector = loss_func.compute_loss(target, layers[numLayers-1].getOutputs());
         double loss = Util.vector_sum(loss_vector);
