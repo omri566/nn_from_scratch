@@ -74,6 +74,12 @@ public class layer {
     public double[][] getWeightUpdates() {
         return weightUpdates;
     }
+    public double[] getActivationDerivative() {
+        return activation.derivative(preActivations);
+    }
+    public double getActivationDerivative(int j){
+        return activation.derivative(preActivations[j]);
+    }
     public void addBiasesNudge(double[] nudge) {
         if (nudge.length != biases.length) {
             throw new IllegalArgumentException("Nudge size must match the number of neurons.");

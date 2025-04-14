@@ -93,7 +93,7 @@ public class network {
         double loss = Util.vector_sum(loss_vector);
         // Calculate deltas for output layer
         double[] error_vector = Util.multiply(loss_func.compute_loss_derivative(layers[numLayers-1].getOutputs(), target),
-        activation.derivative(layers[numLayers-1].getPreActivations()));
+        layers[numLayers-1].getActivationDerivative());
         deltas[numLayers - 1] = error_vector;//indentify the last layer for backpropagation
 
 
@@ -105,7 +105,7 @@ public class network {
                 for(int k = 0; k< layers[i+1].getNumNeurons(); k++){
                     weightedSum += deltas[i+1][k]*layers[i+1].getWeights()[k][j];
                 }
-                deltas[i][j] = weightedSum * activation.derivative(layers[i].getPreActivations()[j]);
+                deltas[i][j] = weightedSum * layers[i].getActivationDerivative(j);
 
             }
         }
