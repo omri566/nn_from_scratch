@@ -1,5 +1,9 @@
 public class Util {
     
+
+    public static final double EPSILON = 1e-12;
+
+
     public static double[] dotProduct(double[] vector , double[][] matrix) {
         
         if (matrix[0].length != vector.length) {
@@ -51,9 +55,8 @@ public class Util {
 
     public static double[] activate(activation activation, double[] vector) {
         double[] result = new double[vector.length];
-        for (int i = 0; i < vector.length; i++) {
-            result[i] = activation.activate(vector[i]);
-        }
+        result = activation.activate(vector);
+
         return result;
     }
     public static double vector_mean(double[] vector) {
@@ -69,6 +72,14 @@ public class Util {
             sum += vector[i];
         }
         return sum;
+    }
+    
+    public static double[][] one_hot(int[] labels, int num_classes) {
+        double[][] one_hot = new double[labels.length][num_classes];
+        for (int i = 0; i < labels.length; i++) {
+            one_hot[i][labels[i]] = 1.0;
+        }
+        return one_hot;
     }
 
 

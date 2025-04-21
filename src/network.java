@@ -1,3 +1,4 @@
+import java.util.Arrays;
 public class network {
 
     layer[] layers;
@@ -48,23 +49,14 @@ public class network {
         }
     }
 
-    public double[] getoutput(double[] inputs){
-        
-        //initialize the outputs
-        double[] outputs = null;
-
-        // Loop through each layer and get the outputs
-        for (int i = 0 ; i < numLayers; i++){
-            if (i==0){ // Input layer - takes inputs directly
-                outputs = layers[i].getOutputs(inputs);
-            }
-            else {
-                outputs = layers[i].getOutputs(outputs);
-            }
+    public double[] getoutput(double[] inputs) {
+        double[] outputs = inputs;
+        for (int i = 0; i < numLayers; i++) {
+            outputs = layers[i].getOutputs(outputs);
         }
-
         return outputs;
     }
+    
 
     public double update_nudges(double[] input, double[] target){
         
@@ -84,6 +76,7 @@ public class network {
             layers_inputs[i + 1] = outputs;
         }
 
+
         double[][] deltas = new double[numLayers][];
         for (int i = 0; i < numLayers; i++) { // Initialize deltas to avoid runtime errors due to uninitialized arrays
             deltas[i] = new double[layers[i].getNumNeurons()];
@@ -92,8 +85,9 @@ public class network {
         double[] loss_vector = loss_func.compute_loss(target, layers[numLayers-1].getOutputs());
         double loss = Util.vector_sum(loss_vector);
         // Calculate deltas for output layer
-        double[] error_vector = Util.multiply(loss_func.compute_loss_derivative(layers[numLayers-1].getOutputs(), target),
-        layers[numLayers-1].getActivationDerivative());
+        double[] error_vector = loss_func.compute_loss_derivative(target,layers[numLayers-1].getOutputs());
+
+        
         deltas[numLayers - 1] = error_vector;//indentify the last layer for backpropagation
 
 
@@ -106,7 +100,7 @@ public class network {
                     weightedSum += deltas[i+1][k]*layers[i+1].getWeights()[k][j];
                 }
                 deltas[i][j] = weightedSum * layers[i].getActivationDerivative(j);
-
+                
             }
         }
 
@@ -116,7 +110,11 @@ public class network {
             layers[i].addBiasesNudge(deltas[i]);
             for(int j = 0; j < layers[i].getNumNeurons(); j++){
                 for(int k = 0; k < layers[i].getWeights()[j].length; k++){
+                    
                     layers[i].getWeightUpdates()[j][k] += deltas[i][j] * layers_inputs[i][k];
+                    if (Double.isNaN(deltas[i][j]) || Double.isNaN(layers_inputs[i][k])) {
+                        throw new RuntimeException("NaN detected in deltas or inputs at layer " + i);
+                    }
                 }
             }
 
@@ -130,6 +128,7 @@ public class network {
             throw new IllegalArgumentException("Input and target arrays must have the same length.");
         
         }
+       
         double batch_loss = 0;
         for(int i = 0; i < inputs.length; i++) {
            batch_loss += update_nudges(inputs[i], targets[i]);

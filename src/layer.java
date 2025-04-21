@@ -29,7 +29,7 @@ public class layer {
         this.weightUpdates = new double[numNeurons][numinputs];
         for (int i = 0; i < numNeurons; i++) {
             for (int j = 0; j < numinputs; j++) {
-                this.weights[i][j] = Math.random(); // Initialize weights randomly
+                weights[i][j] = (Math.random() - 0.5) * 2.0 * Math.sqrt(2.0 / numinputs);
                 this.weightUpdates[i][j] = 0; // Initialize weight updates to zero
             }
         }

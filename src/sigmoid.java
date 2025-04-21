@@ -7,11 +7,14 @@ public class sigmoid implements activation {
     
     
     @Override
-    public double activate(double x) {
-        // Implement the activation function
-        // For example, using the sigmoid activation function
-        return 1 / (1 + Math.exp(-x));
+    public double[] activate(double[] x) {
+        double[] result = new double[x.length];
+        for (int i = 0; i < x.length; i++) {
+            result[i] = 1.0 / (1.0 + Math.exp(-x[i]));
+        }
+        return result;
     }
+    
     public double derivative(double sigmoidOutput) {
         // sigmoidOutput is assumed to be σ(x), not the raw x
         return sigmoidOutput * (1 - sigmoidOutput);
@@ -25,3 +28,4 @@ public class sigmoid implements activation {
         return derivatives;
     }
 }
+

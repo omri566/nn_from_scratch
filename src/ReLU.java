@@ -7,15 +7,20 @@ public class ReLU implements activation {
 
 
     // ReLU activation function implementation
-    @Override
-    public double activate(double x) {
+    private double activate(double x) {
+        // Implement the activation xwfunction
+        // For example, using the ReLU activation function
+        return Math.max(0, x);
+    }
+    public double[] activate(double[] x) {
         // Implement the activation function
         // For example, using the ReLU activation function
-        if (x < 0) {
-            return 0;
-        } else {
-            return x;
+        double[] activated = new double[x.length];
+        for (int i = 0; i < x.length; i++) {
+            activated[i] = activate(x[i]);
         }
+        return activated;
+        
     }
 
     public double derivative(double x) {
