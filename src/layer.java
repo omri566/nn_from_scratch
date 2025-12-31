@@ -84,17 +84,18 @@ public class layer {
         if (nudge.length != biases.length) {
             throw new IllegalArgumentException("Nudge size must match the number of neurons.");
         }
+        // Accumulate bias updates instead of applying them immediately so they are averaged with the batch
         for (int i = 0; i < biases.length; i++) {
-            biases[i] += nudge[i];
+            biasUpdates[i] += nudge[i];
         }
     }
-    public void updateParams(double leanrning_rate, int batch_size) {
+    public void updateParams(double learning_rate, int batch_size) {
         for (int i = 0; i < numNeurons; i++) {
             for (int j = 0; j < inputSize; j++) {
-                weights[i][j] -= (learning_rate * weightUpdates[i][j])/batch_size;
+                weights[i][j] -= (learning_rate * weightUpdates[i][j]) / batch_size;
                 weightUpdates[i][j] = 0;
             }
-            biases[i] -= (learning_rate * biasUpdates[i])/batch_size;
+            biases[i] -= (learning_rate * biasUpdates[i]) / batch_size;
             biasUpdates[i] = 0;
         }
     }

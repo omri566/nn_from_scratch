@@ -3,7 +3,7 @@ public class App {
     public static void main(String[] args) throws Exception {
 
         // Load MNIST data
-        MNISTLoaderArrays.loadCSV("nn_from_scratch/raw_data/train.csv", 10000);
+        MNISTLoaderArrays.loadCSV("raw_data/train.csv", 10000);
         double[][] features = MNISTLoaderArrays.features;
         int[] labels = MNISTLoaderArrays.labels;
         double[][] one_hot_labels = Util.one_hot(labels, 10);
