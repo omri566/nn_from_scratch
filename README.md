@@ -1,18 +1,15 @@
-## Getting Started
+# nn_from_scratch
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+Small Java neural network from scratch (no external libraries). Trains on MNIST-formatted CSV.
 
-## Folder Structure
+Quick start
 
-The workspace contains two folders by default, where:
+- Build: `javac -d bin src/*.java`
+- Train: `java -cp bin App`
+- Visualize predictions: `java -cp bin VisualizePredictions [epochs] [batch] [samples]`
+- Smoke test: `java -cp bin QuickTest`
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+Notes
 
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
-
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
-
-## Dependency Management
-
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+- Data: place `train.csv` in `raw_data/` (CSV with header: `label,pixel0,...`).
+- Educational code — not optimized for production.
